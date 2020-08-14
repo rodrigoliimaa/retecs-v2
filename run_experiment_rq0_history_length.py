@@ -14,6 +14,7 @@ history_lengths = [2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 25, 50]
 
 
 def exp_history_length(iteration):
+    print("######## Running Iteration: {}".format(iteration))
     avg_napfd = []
 
     ags = [

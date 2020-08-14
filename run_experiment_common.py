@@ -72,7 +72,7 @@ import retecs
 import scenarios
 import stats
 
-ITERATIONS = 30
+ITERATIONS = 1
 CI_CYCLES = 1000
 
 DATA_DIR = 'RESULTS'
@@ -99,8 +99,8 @@ reward_names = {
 
 env_names = {
     'paintcontrol': 'ABB Paint Control',
-    'iofrol': 'ABB IOF/ROL',
-    'gsdtsr': 'GSDTSR'
+    'iofrol': 'ABB IOF/ROL'
+    #'gsdtsr': 'GSDTSR'
 }
 
 
@@ -111,8 +111,8 @@ def get_scenario(name):
         sc = scenarios.IndustrialDatasetScenarioProvider(tcfile='DATA/paintcontrol.csv')
     elif name == 'iofrol':
         sc = scenarios.IndustrialDatasetScenarioProvider(tcfile='DATA/iofrol.csv')
-    elif name == 'gsdtsr':
-        sc = scenarios.IndustrialDatasetScenarioProvider(tcfile='DATA/gsdtsr.csv')
+    #elif name == 'gsdtsr':
+    #    sc = scenarios.IndustrialDatasetScenarioProvider(tcfile='DATA/gsdtsr.csv')
 
     return sc
 
@@ -127,7 +127,7 @@ def run_experiments(exp_fun, parallel=PARALLEL):
     print('Ran experiments: %d results' % len(avg_res))
 
 
-def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol', 'gsdtsr']):
+def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol']):#, 'gsdtsr']):
     ags = [
         lambda: (
             agents.TableauAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, learning_rate=retecs.DEFAULT_LEARNING_RATE,

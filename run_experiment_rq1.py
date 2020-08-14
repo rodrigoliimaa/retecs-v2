@@ -78,7 +78,7 @@ def visualize():
 
             axarr[row, column].legend_.remove()
 
-            axarr[row, column].set_xticks(np.arange(0, 350, 30), minor=False)
+            axarr[row, column].set_xticks(np.arange(0, 310, 30), minor=False)
             axarr[row, column].set_xticklabels([0, '', 60, '', 120, '', 180, '', 240, '', 300], minor=False)
             axarr[row, column].xaxis.grid(True, which='major')
 

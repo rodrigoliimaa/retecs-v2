@@ -5,7 +5,7 @@ import glob
 import os
 
 import matplotlib
-matplotlib.use('Qt4Agg')
+#matplotlib.use('Qt4Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -203,7 +203,7 @@ def print_failure_detection(result_dir, file_prefixes):
         dfs = pd.concat([pickle_to_dataframe(f) for f in files])
         df = df.append(dfs)
 
-    print df
+    print (df)
 
 if __name__ == '__main__':
     stats_file = 'tableau_iofrol_timerank_lr0.3_as5_n1000_eps0.1_hist3_tableau_stats.p'
