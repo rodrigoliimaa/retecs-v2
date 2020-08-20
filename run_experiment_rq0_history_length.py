@@ -41,7 +41,8 @@ def exp_history_length(iteration):
                                               file_prefix=file_appendix,
                                               dump_interval=100,
                                               validation_interval=0,
-                                              output_dir=DATA_DIR)
+                                              output_dir=DATA_DIR,
+                                              output_csv_dir=DATA_DIR_CSV)
             res = rl_learning.train(no_scenarios=CI_CYCLES,
                                     print_log=False,
                                     plot_graphs=False,
