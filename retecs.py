@@ -10,6 +10,7 @@ import sys
 import time
 import os.path
 import plot_stats
+import csv
 
 try:
     import cPickle as pickle
@@ -118,7 +119,7 @@ def process_scenario(agent, sc, preprocess):
 
 
 class PrioLearning(object):
-    def __init__(self, agent, scenario_provider, file_prefix, reward_function, output_dir, preprocess_function,
+    def __init__(self, agent, scenario_provider, file_prefix, reward_function, output_dir, output_csv_dir, preprocess_function,
                  dump_interval=DEFAULT_DUMP_INTERVAL, validation_interval=DEFAULT_VALIDATION_INTERVAL):
         self.agent = agent
         self.scenario_provider = scenario_provider
@@ -136,6 +137,10 @@ class PrioLearning(object):
         self.val_file = os.path.join(output_dir, '%s_val' % file_prefix)
         self.stats_file = os.path.join(output_dir, '%s_stats' % file_prefix)
         self.agent_file = os.path.join(output_dir, '%s_agent' % file_prefix)
+
+        self.val_csv_file = os.path.join(output_csv_dir, '%s_val' % file_prefix)
+        self.stats_csv_file = os.path.join(output_csv_dir, '%s_stats' % file_prefix)
+        self.agent_csv_file = os.path.join(output_csv_dir, '%s_agent' % file_prefix)
 
     def run_validation(self, scenario_count):
         val_res = self.validation()
@@ -277,6 +282,11 @@ class PrioLearning(object):
             # Data Dumping
             if self.dump_interval > 0 and sum_scenarios % self.dump_interval == 0:
                 pickle.dump(stats, open(self.stats_file + '.p', 'wb'))
+                with open(self.stats_csv_file + '.csv', "w") as f:
+                    writer = csv.writer(f)
+                    for i in stats:
+                        writer.writerow([i, stats[i]])
+                    f.close() 
 
             if self.validation_interval > 0 and (sum_scenarios == 1 or sum_scenarios % self.validation_interval == 0):
                 if print_log:
@@ -284,13 +294,23 @@ class PrioLearning(object):
 
                 self.run_validation(sum_scenarios)
                 pickle.dump(self.validation_res, open(self.val_file + '.p', 'wb'))
+                with open(self.val_csv_file + '.csv', "w") as f:
+                    writer = csv.writer(f)
+                    for i in self.validation_res:
+                        writer.writerow([i, self.validation_res[i]])
+                    f.close()
 
                 if print_log:
                     print('done')
 
         if self.dump_interval > 0:
             self.agent.save(self.agent_file)
-            pickle.dump(stats, open(self.stats_file + '.p', 'wb'))
+            # self.agent.save(self.agent_csv_file)
+            with open(self.stats_csv_file + '.csv', "w") as f:
+                    writer = csv.writer(f)
+                    for i in stats:
+                        writer.writerow([i, stats[i]])
+                    f.close()
 
         if plot_graphs:
             plot_stats.plot_stats_single_figure(self.file_prefix, self.stats_file + '.p', self.val_file + '.p', 1,
@@ -320,6 +340,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--dump_interval', type=int, default=DEFAULT_DUMP_INTERVAL)
     parser.add_argument('-v', '--validation_interval', type=int, default=DEFAULT_VALIDATION_INTERVAL)
     parser.add_argument('-o', '--output_dir', default='.')
+    parser.add_argument('-oc', '--output_dir_csv', default='.')
     parser.add_argument('-q', '--quiet', action='store_true', default=False)
     parser.add_argument('--plot-graphs', action='store_true', default=False)
     parser.add_argument('--save-graphs', action='store_true', default=False)
@@ -387,7 +408,8 @@ if __name__ == '__main__':
                                file_prefix=prefix,
                                dump_interval=args.dump_interval,
                                validation_interval=args.validation_interval,
-                               output_dir=args.output_dir)
+                               output_dir=args.output_dir,
+                               output_csv_dir=args.output_dir_csv)
     avg_napfd = rl_learning.train(no_scenarios=args.no_scenarios, print_log=not args.quiet,
                                   plot_graphs=args.plot_graphs,
                                   save_graphs=args.save_graphs,

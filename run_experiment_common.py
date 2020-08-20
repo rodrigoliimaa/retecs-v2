@@ -76,6 +76,7 @@ ITERATIONS = 1
 CI_CYCLES = 1000
 
 DATA_DIR = 'RESULTS'
+DATA_DIR_CSV = 'RESULTS_CSV'
 FIGURE_DIR = 'RESULTS'
 PARALLEL = True
 PARALLEL_POOL_SIZE = 2
@@ -163,7 +164,8 @@ def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol']):
                                                   file_prefix=file_appendix,
                                                   dump_interval=100,
                                                   validation_interval=0,
-                                                  output_dir=DATA_DIR)
+                                                  output_dir=DATA_DIR,
+                                                  output_csv_dir=DATA_DIR_CSV)
                 res = rl_learning.train(no_scenarios=CI_CYCLES,
                                         print_log=False,
                                         plot_graphs=False,
