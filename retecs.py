@@ -10,7 +10,7 @@ import sys
 import time
 import os.path
 import plot_stats
-import pandas as pd
+import csv
 
 try:
     import cPickle as pickle
@@ -282,7 +282,11 @@ class PrioLearning(object):
             # Data Dumping
             if self.dump_interval > 0 and sum_scenarios % self.dump_interval == 0:
                 pickle.dump(stats, open(self.stats_file + '.p', 'wb'))
-                (pd.DataFrame.from_dict(data=stats, orient='index').to_csv(self.stats_csv_file + '.csv', header=False))
+                with open(self.stats_csv_file + '.csv', "w") as f:
+                    writer = csv.writer(f)
+                    for i in stats:
+                        writer.writerow([i, stats[i]])
+                    f.close() 
 
             if self.validation_interval > 0 and (sum_scenarios == 1 or sum_scenarios % self.validation_interval == 0):
                 if print_log:
@@ -290,7 +294,11 @@ class PrioLearning(object):
 
                 self.run_validation(sum_scenarios)
                 pickle.dump(self.validation_res, open(self.val_file + '.p', 'wb'))
-                (pd.DataFrame.from_dict(data=self.validation_res, orient='index').to_csv(self.val_csv_file + '.csv', header=False))
+                with open(self.val_csv_file + '.csv', "w") as f:
+                    writer = csv.writer(f)
+                    for i in self.validation_res:
+                        writer.writerow([i, self.validation_res[i]])
+                    f.close()
 
                 if print_log:
                     print('done')
@@ -298,8 +306,11 @@ class PrioLearning(object):
         if self.dump_interval > 0:
             self.agent.save(self.agent_file)
             # self.agent.save(self.agent_csv_file)
-            pickle.dump(stats, open(self.stats_file + '.p', 'wb'))
-            (pd.DataFrame.from_dict(data=stats, orient='index').to_csv(self.stats_csv_file + '.csv', header=False))
+            with open(self.stats_csv_file + '.csv', "w") as f:
+                    writer = csv.writer(f)
+                    for i in stats:
+                        writer.writerow([i, stats[i]])
+                    f.close()
 
         if plot_graphs:
             plot_stats.plot_stats_single_figure(self.file_prefix, self.stats_file + '.p', self.val_file + '.p', 1,
