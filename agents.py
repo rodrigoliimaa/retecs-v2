@@ -1,6 +1,9 @@
 import numpy as np
 import os
 from sklearn import neural_network
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import LSTM
 
 try:
     import cPickle as pickle
@@ -204,6 +207,99 @@ class NetworkAgent(BaseAgent):
         else:
             self.model.fit(x, y)  # Call fit once to learn classes
             self.model_fit = True
+
+
+class LSTMAgent(BaseAgent):
+    def __init__(self, state_size, action_size, hidden_size, histlen):
+        super(LSTMAgent, self).__init__(histlen=histlen)
+        self.name = 'lstmclassifier'
+        self.experience_length = 10000
+        self.experience_batch_size = 1000
+        self.experience = ExperienceReplay(max_memory=self.experience_length)
+        self.episode_history = []
+        self.iteration_counter = 0
+        self.action_size = action_size
+
+        if isinstance(hidden_size, tuple):
+            self.hidden_size = hidden_size
+        else:
+            self.hidden_size = (hidden_size,)
+        self.model = None
+        self.model_fit = False
+        self.init_model(True)
+
+    # TODO This could improve performance (if necessary)
+    # def get_all_actions(self, states):
+    #   try:
+
+    def init_model(self, warm_start=True):
+
+        # create the LSTM network
+        #look_back = 1
+        self.model = Sequential()
+        self.model.add(LSTM(4, input_shape=(1, 6)))
+        self.model.add(Dense(1))
+        self.model.compile(loss='mean_squared_error', optimizer='adam')
+        #self.model = neural_network.MLPClassifier(hidden_layer_sizes=self.hidden_size, activation='relu',
+        #                                          warm_start=warm_start, solver='adam', max_iter=750)
+        self.model_fit = False
+
+    def get_action(self, s):
+        if self.model_fit:
+            s_ = np.array(s)
+            s_ = np.reshape(s_, (1, 1, s_.shape[0]))
+            if self.action_size == 1:
+                a = self.model.predict(s_)[0]
+                #a = self.model.predict_proba(s.reshape(1, -1))[0][1]
+            else:
+                a = self.model.predict(s.reshape(1, -1))[0]
+        else:
+            a = np.random.random()
+
+        if self.train_mode:
+            self.episode_history.append((s, a))
+
+        return a
+
+    def reward(self, rewards):
+        if not self.train_mode:
+            return
+
+        try:
+            x = float(rewards)
+            rewards = [x] * len(self.episode_history)
+        except:
+            if len(rewards) < len(self.episode_history):
+                raise Exception('Too few rewards')
+
+        self.iteration_counter += 1
+
+        for ((state, action), reward) in zip(self.episode_history, rewards):
+            self.experience.remember((state, reward))
+
+        self.episode_history = []
+
+        if self.iteration_counter == 1 or self.iteration_counter % 5 == 0:
+            self.learn_from_experience()
+
+    def learn_from_experience(self):
+        experiences = self.experience.get_batch(self.experience_batch_size)
+        x, y = zip(*experiences)
+        x, y = np.array(x), np.array(y)
+
+        x = np.reshape(x, (x.shape[0], 1, x.shape[1]))
+
+        if self.model_fit:
+            try:
+                self.model.fit(x, y)
+            except ValueError:
+                self.init_model(warm_start=False)
+                self.model.fit(x, y)#, epochs=100, batch_size=1, verbose=2)
+                self.model_fit = True
+        else:
+            self.model.fit(x, y)#, epochs=100, batch_size=1, verbose=2)  # Call fit once to learn classes
+            self.model_fit = True
+
 
 
 class RandomAgent(BaseAgent):

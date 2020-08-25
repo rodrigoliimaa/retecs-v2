@@ -5,7 +5,7 @@
 from run_experiment_common import *
 
 # For overriding defaults from run_experiment_common
-PARALLEL = True
+PARALLEL = False
 RUN_EXPERIMENT = True
 VISUALIZE_RESULTS = True
 

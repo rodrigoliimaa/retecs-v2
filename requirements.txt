@@ -4,3 +4,5 @@ numpy>=1.11
 pandas>=0.19
 seaborn>=0.7
 python-qt>=0.50
+Keras>=2.4.3
+tensorflow>=2.3.0

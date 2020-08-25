@@ -135,10 +135,14 @@ def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol']):
                                 state_size=retecs.DEFAULT_STATE_SIZE,
                                 action_size=retecs.DEFAULT_NO_ACTIONS, epsilon=retecs.DEFAULT_EPSILON),
             retecs.preprocess_discrete, reward.timerank),
-        lambda: (agents.NetworkAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, state_size=retecs.DEFAULT_STATE_SIZE,
+        lambda: (agents.LSTMAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, state_size=retecs.DEFAULT_STATE_SIZE,
                                      action_size=1,
                                      hidden_size=retecs.DEFAULT_NO_HIDDEN_NODES), retecs.preprocess_continuous,
                  reward.tcfail)
+#        lambda: (agents.NetworkAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, state_size=retecs.DEFAULT_STATE_SIZE,
+#                                     action_size=1,
+#                                     hidden_size=retecs.DEFAULT_NO_HIDDEN_NODES), retecs.preprocess_continuous,
+#                 reward.tcfail)
     ]
 
     reward_funs = {

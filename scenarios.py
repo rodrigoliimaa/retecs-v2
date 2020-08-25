@@ -510,7 +510,7 @@ class IndustrialDatasetScenarioProvider(RandomScenarioProvider):
 
         cycledf = self.tcdf.loc[self.tcdf.Cycle == self.cycle]
 
-        seltc = cycledf[self.tc_fieldnames].to_dict(orient='record')
+        seltc = cycledf[self.tc_fieldnames].to_dict(orient='records')
 
         if name_suffix is None:
             name_suffix = (self.maxtime + timedelta(days=1)).isoformat()
