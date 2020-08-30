@@ -5,7 +5,7 @@
 from run_experiment_common import *
 
 # For overriding defaults from run_experiment_common
-PARALLEL = False
+PARALLEL = True
 RUN_EXPERIMENT = True
 VISUALIZE_RESULTS = True
 
@@ -21,44 +21,44 @@ def visualize():
     pure_df = df[(~df['agent'].isin(['heur_random', 'heur_sort', 'heur_weight'])) & (df['detected'] + df['missed']) > 0]
     mean_df = pure_df.groupby(['step', 'env', 'agent', 'rewardfun'], as_index=False).mean()
 
-    # One subplot per data set (= one row in the paper)
+    #One subplot per data set (= one row in the paper)
     # for env in mean_df['env'].unique():
     #     plotname = 'rq1_napfd_%s' % env
     #     fig, axarr = plt.subplots(1, 3, sharey=True, figsize=figsize_text(1.0, 0.45))
     #     i = 0
-    #
+    
     #     for rewardfun in mean_df['rewardfun'].unique():
     #         for agidx, (labeltext, agent, linestyle) in enumerate(
     #                 [('Network', 'mlpclassifier', '-'), ('Tableau', 'tableau', '--')]):
     #             rel_df = mean_df[(mean_df['env'] == env) & (mean_df['rewardfun'] == rewardfun)]
     #             rel_df[rel_df['agent'] == agent].plot(x='step', y='napfd', label=labeltext, ylim=[0, 1], linewidth=0.8,
     #                                                   style=linestyle, color=sns.color_palette()[agidx], ax=axarr[i])
-    #
+    
     #             x = rel_df.loc[rel_df['agent'] == agent, 'step']
     #             y = rel_df.loc[rel_df['agent'] == agent, 'napfd']
     #             trend = np.poly1d(np.polyfit(x, y, 1))
     #             axarr[i].plot(x, trend(x), linestyle, color='k', linewidth=0.8)
-    #
+    
     #         axarr[i].set_xlabel('CI Cycle')
     #         axarr[i].legend_.remove()
     #         axarr[i].set_title(reward_names[rewardfun])
     #         axarr[i].set_xticks(np.arange(0, 350, 30), minor=False)
     #         axarr[i].set_xticklabels([0, '', 60, '', 120, '', 180, '', 240, '', 300], minor=False)
-    #
+    
     #         axarr[i].xaxis.grid(True, which='minor')
-    #
+    
     #         if i == 0:
     #             axarr[i].set_ylabel('NAPFD')
     #             axarr[i].legend(loc=2, frameon=True)
-    #
+    
     #         i += 1
-    #
+    
     #     fig.tight_layout()
     #     fig.subplots_adjust(wspace=0.08)
     #     save_figures(fig, plotname)
     #     plt.clf()
 
-    # One groupplot
+    #One groupplot
     fig, axarr = plt.subplots(3, 3, sharey=True, sharex=True, figsize=figsize_text(1.0, 1.2))
     plotname = 'rq1_napfd'
     subplot_labels = ['(a)', '(b)', '(c)']
@@ -66,7 +66,7 @@ def visualize():
     for column, env in enumerate(sorted(mean_df['env'].unique(), reverse=True)):
         for row, rewardfun in enumerate(mean_df['rewardfun'].unique()):
             for agidx, (labeltext, agent, linestyle) in enumerate(
-                    [('Network', 'mlpclassifier', '-'), ('Tableau', 'tableau', '--')]):
+                    [('LSTM', 'lstmclassifier', '-'), ('MLP', 'mlpclassifier', '--')]): # ('Tableau', 'tableau', '--')]): # mlpclassifier
                 rel_df = mean_df[(mean_df['env'] == env) & (mean_df['rewardfun'] == rewardfun)]
                 rel_df[rel_df['agent'] == agent].plot(x='step', y='napfd', label=labeltext, ylim=[0, 1], linewidth=0.8,
                                                       style=linestyle, color=sns.color_palette()[agidx], ax=axarr[row, column])
@@ -107,7 +107,7 @@ def visualize():
 
 if __name__ == '__main__':
     if RUN_EXPERIMENT:
-        run_experiments(exp_run_industrial_datasets, parallel=PARALLEL)
+        run_experiments(exp_run_industrial_datasets, parallel=False) #True
 
     if VISUALIZE_RESULTS:
         visualize()

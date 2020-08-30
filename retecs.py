@@ -305,7 +305,7 @@ class PrioLearning(object):
 
         if self.dump_interval > 0:
             self.agent.save(self.agent_file)
-            # self.agent.save(self.agent_csv_file)
+            #self.agent.save(self.agent_csv_file)
             with open(self.stats_csv_file + '.csv', "w") as f:
                     writer = csv.writer(f)
                     for i in stats:

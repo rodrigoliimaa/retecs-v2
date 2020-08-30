@@ -73,13 +73,14 @@ import scenarios
 import stats
 
 ITERATIONS = 1
-CI_CYCLES = 1000
+#CI_CYCLES = 5
+CI_CYCLES = 1000 #1000
 
 DATA_DIR = 'RESULTS'
 DATA_DIR_CSV = 'RESULTS_CSV'
 FIGURE_DIR = 'RESULTS'
 PARALLEL = True
-PARALLEL_POOL_SIZE = 2
+PARALLEL_POOL_SIZE = 4
 
 RUN_EXPERIMENT = True
 VISUALIZE_RESULTS = True
@@ -100,8 +101,8 @@ reward_names = {
 
 env_names = {
     'paintcontrol': 'ABB Paint Control',
-    'iofrol': 'ABB IOF/ROL'
-    #'gsdtsr': 'GSDTSR'
+    'iofrol': 'ABB IOF/ROL',
+    'gsdtsr': 'GSDTSR'
 }
 
 
@@ -128,21 +129,21 @@ def run_experiments(exp_fun, parallel=PARALLEL):
     print('Ran experiments: %d results' % len(avg_res))
 
 
-def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol']):#, 'gsdtsr']):
+def exp_run_industrial_datasets(iteration, datasets=['iofrol', 'paintcontrol']):#, 'gsdtsr']):
     ags = [
-        lambda: (
-            agents.TableauAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, learning_rate=retecs.DEFAULT_LEARNING_RATE,
-                                state_size=retecs.DEFAULT_STATE_SIZE,
-                                action_size=retecs.DEFAULT_NO_ACTIONS, epsilon=retecs.DEFAULT_EPSILON),
-            retecs.preprocess_discrete, reward.timerank),
+        #lambda: (
+        #    agents.TableauAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, learning_rate=retecs.DEFAULT_LEARNING_RATE,
+        #                        state_size=retecs.DEFAULT_STATE_SIZE,
+        #                        action_size=retecs.DEFAULT_NO_ACTIONS, epsilon=retecs.DEFAULT_EPSILON),
+        #    retecs.preprocess_discrete, reward.timerank),
+        lambda: (agents.NetworkAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, state_size=retecs.DEFAULT_STATE_SIZE,
+                                     action_size=1,
+                                     hidden_size=retecs.DEFAULT_NO_HIDDEN_NODES), retecs.preprocess_continuous,
+                 reward.tcfail),
         lambda: (agents.LSTMAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, state_size=retecs.DEFAULT_STATE_SIZE,
                                      action_size=1,
                                      hidden_size=retecs.DEFAULT_NO_HIDDEN_NODES), retecs.preprocess_continuous,
                  reward.tcfail)
-#        lambda: (agents.NetworkAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, state_size=retecs.DEFAULT_STATE_SIZE,
-#                                     action_size=1,
-#                                     hidden_size=retecs.DEFAULT_NO_HIDDEN_NODES), retecs.preprocess_continuous,
-#                 reward.tcfail)
     ]
 
     reward_funs = {
@@ -166,12 +167,12 @@ def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol']):
                                                   reward_function=reward_fun,
                                                   preprocess_function=preprocessor,
                                                   file_prefix=file_appendix,
-                                                  dump_interval=100,
+                                                  dump_interval=100, #100
                                                   validation_interval=0,
                                                   output_dir=DATA_DIR,
                                                   output_csv_dir=DATA_DIR_CSV)
                 res = rl_learning.train(no_scenarios=CI_CYCLES,
-                                        print_log=False,
+                                        print_log=True,
                                         plot_graphs=False,
                                         save_graphs=False,
                                         collect_comparison=(i == 0))

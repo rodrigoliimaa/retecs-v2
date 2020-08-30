@@ -294,11 +294,16 @@ class LSTMAgent(BaseAgent):
                 self.model.fit(x, y)
             except ValueError:
                 self.init_model(warm_start=False)
-                self.model.fit(x, y)#, epochs=100, batch_size=1, verbose=2)
+                self.model.fit(x, y, epochs=1, batch_size=16, verbose=True)
                 self.model_fit = True
         else:
-            self.model.fit(x, y)#, epochs=100, batch_size=1, verbose=2)  # Call fit once to learn classes
+            self.model.fit(x, y, epochs=1, batch_size=16, verbose=True)  # Call fit once to learn classes
             self.model_fit = True
+    
+    def save(self, filename):
+        """ Stores LSTM model """
+        self.model.save(filename)
+        #pickle.dump(self, open(filename + '.p', 'wb'), 2)
 
 
 
