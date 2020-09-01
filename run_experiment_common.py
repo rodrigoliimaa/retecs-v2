@@ -168,11 +168,11 @@ def exp_run_industrial_datasets(iteration, datasets=['iofrol', 'paintcontrol']):
                                                   preprocess_function=preprocessor,
                                                   file_prefix=file_appendix,
                                                   dump_interval=100, #100
-                                                  validation_interval=0,
+                                                  validation_interval=100,
                                                   output_dir=DATA_DIR,
                                                   output_csv_dir=DATA_DIR_CSV)
                 res = rl_learning.train(no_scenarios=CI_CYCLES,
-                                        print_log=True,
+                                        print_log=False,
                                         plot_graphs=False,
                                         save_graphs=False,
                                         collect_comparison=(i == 0))
