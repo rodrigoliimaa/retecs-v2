@@ -237,8 +237,8 @@ class LSTMAgent(BaseAgent):
         # create the LSTM network
         #look_back = 1
         self.model = Sequential()
-        self.model.add(LSTM(12, input_shape=(4, 6)))
-        self.model.add(Dense(10))
+        self.model.add(LSTM(4, input_shape=(1, 6)))
+        self.model.add(Dense(1))
         self.model.compile(loss='mean_squared_error', optimizer='adam')
         #self.model = neural_network.MLPClassifier(hidden_layer_sizes=self.hidden_size, activation='relu',
         #                                          warm_start=warm_start, solver='adam', max_iter=750)
@@ -247,7 +247,7 @@ class LSTMAgent(BaseAgent):
     def get_action(self, s):
         if self.model_fit:
             s_ = np.array(s)
-            s_ = np.reshape(s_, (1, 4, s_.shape[0]))
+            s_ = np.reshape(s_, (1, 1, s_.shape[0]))
             if self.action_size == 1:
                 a = self.model.predict(s_)[0]
                 #a = self.model.predict_proba(s.reshape(1, -1))[0][1]
@@ -287,7 +287,7 @@ class LSTMAgent(BaseAgent):
         x, y = zip(*experiences)
         x, y = np.array(x), np.array(y)
 
-        x = np.reshape(x, (x.shape[0], 4, x.shape[1]))
+        x = np.reshape(x, (x.shape[0], 1, x.shape[1]))
 
         if self.model_fit:
             try:
