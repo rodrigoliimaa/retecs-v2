@@ -6,7 +6,7 @@ Extension of the previous work adding LSTM (Long short-term memory) to improve t
 IF998 - Tópicos Avançados em SI 2 / IN1165 - Tópicos Avançados em Inteligência Computacional 2
 Centro de Informática - UFPE
 
-Students:
+## Students:
 - Rodrigo Lima
 - Jairo Raphael
 - Bruno Mota
