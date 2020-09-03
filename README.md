@@ -1,3 +1,16 @@
+# Extension of Reinforced Test Case Selection (RETECS) with LSTM
+
+Extension of the previous work adding LSTM (Long short-term memory) to improve the previous results.
+
+Final work of Discipline: Reinforcement Learning
+IF998 - Tópicos Avançados em SI 2 / IN1165 - Tópicos Avançados em Inteligência Computacional 2
+Centro de Informática - UFPE
+
+Students:
+Rodrigo Lima
+Jairo Raphael
+Bruno Mota
+
 # Reinforced Test Case Selection (RETECS)
 
 Implementation of RETECS and data sets for the paper *Reinforcement Learning for Automatic Test Case Prioritization and Selection in Continuous Integration*.
