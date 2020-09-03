@@ -2,9 +2,8 @@
 
 Extension of the previous work adding LSTM (Long short-term memory) to improve the previous results.
 
-## Final work of Discipline: Reinforcement Learning
+## Final work of Discipline: Reinforcement Learning - Centro de Informática - UFPE
 IF998 - Tópicos Avançados em SI 2 / IN1165 - Tópicos Avançados em Inteligência Computacional 2
-Centro de Informática - UFPE
 
 ## Students:
 - Rodrigo Lima
